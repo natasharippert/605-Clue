@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    .card-display { text-align: center; }
+    .cards-container { display: flex; justify-content: center; flex-wrap: wrap; }
+    .card { margin: 10px; }
+    .card-image { width: 10px; height: auto; }
+</style>
+</head>
+<body>
+    <div class="card-display">
+        <h2>Your Cards</h2>
+        <div id="cards-container" class="cards-container">
+            <!-- Cards will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const cards = [
+                { imageURL: 'path/to/image1.jpg', name: 'Card 1' },
+                { imageURL: 'path/to/image2.jpg', name: 'Card 2' },
+            ];
+
+            const container = document.getElementById('cards-container');
+
+            cards.forEach((card, index) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card';
+                cardDiv.innerHTML = `<img src="${card.imageURL}" alt="${card.name}" class="card-image">`;
+                container.appendChild(cardDiv);
+            });
+        });
+    </script>
+</body>
+</html>

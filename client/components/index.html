@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+   
+   <div class="container">
+    <img src="../images/mainmenu_background.png" alt="Clue" style="width:100%;">
+    <div class="menu-bottom-one"><a href="../game.html">Start new game</a></div>
+    <div class="menu-bottom-two"><a href="../game.html">  Join game  </a></div>
+    </div>
+  </body>
+
+  <style>
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%; /* Ensure html and body fill the entire viewport */
+      overflow: hidden; /* Prevent scrolling */
+    }
+
+    a {
+      background-color: #909090;
+      padding: 20px;
+      border-radius: 20px;
+      font-size:x-large;
+      text-decoration: none;
+      color:black;
+    }
+    .container {
+      position: relative;
+      text-align: center;
+      color: white;
+      height: 100vh; /* Full viewport height */
+      width: 100vw; /* Full viewport width */
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Cover the container without losing aspect ratio */
+      display: block; /* Remove bottom margin/gap */
+    }
+
+    /* Bottom left text */
+    .menu-bottom-one {
+      position: absolute;
+      bottom: 35%;
+      left: 20%;
+      width: 200px;
+    }
+
+    .menu-bottom-two {
+      position: absolute;
+      bottom: 25%;
+      left: 20%;
+      width: 200px;
+    }
+    </style>

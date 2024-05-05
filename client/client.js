@@ -276,11 +276,19 @@ const roomNames = {
 
 socket.on('playerRoomPosition', (playerRoomPosition) => {
    console.log("Received positions: ", playerRoomPosition);
+   document.querySelectorAll('.room img').forEach(img => img.remove());
+
    const rooms = document.querySelectorAll('.room');
+   const hallways = document.querySelectorAll('.hallway')
+   
    rooms.forEach(room => {
       if (!playerRoomPosition.some(p => `room-${p.x}-${p.y}` === room.id)) {
-         room.innerHTML = `<span class="room-name">${roomNames[room.id] || 'Unknown'}</span>`; // Reset with room name only
+         room.innerHTML = `<span class="room-name">${roomNames[room.id] || 'Unknown'}</span>`;
      }
+   });
+
+   hallways.forEach(hallway => {
+      hallway.innerHTML = ``;
    });
 
    playerRoomPosition.forEach(player => {

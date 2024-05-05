@@ -18,7 +18,7 @@ const { players } = require('./Player.js');
 
 app.use(express.static(path.join(__dirname, '/client')));
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/client/index.html');
+  res.sendFile(__dirname + '/client/components/index.html');
 });
 
 let playerRoomPosition = [
@@ -191,6 +191,31 @@ io.on('connection', (socket) => {
       function handleMove(act) {
          // Create message start
          let msg = data.activePlayer.character + '(' + data.activePlayer.name + ') moved from ';
+         
+         
+         const player = playerRoomPosition.find(p => p.name === data.activePlayer.character);
+         if (!player) {
+            console.log("Player not found");
+            return;
+         }
+
+         switch (act) {
+            case 'up':
+                // Check if the move is within the bounds of the board
+                if (player.y > 0) player.y--;
+                break;
+            case 'down':
+                // Assuming the board has a maximum `y` value of 4 (based on your data)
+                if (player.y < 4) player.y++;
+                break;
+            case 'left':
+                if (player.x > 0) player.x--;
+                break;
+            case 'right':
+                // Assuming the board has a maximum `x` value of 4
+                if (player.x < 4) player.x++;
+                break;
+        }
 
          // Create descriptive message of first room for text based
          let adr = 'hallway';

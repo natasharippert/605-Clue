@@ -1,80 +1,108 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <style>
+      #scoresheet {
+    display: none;
+    background-color: white;
+    position: fixed; /* Adjust positioning as needed */
+    width: 100%; /* Ensure it does not exceed the viewport */
+    height: auto; /* Adjust based on content */
+    top: 80%; /* Adjust based on your layout */
+    left: 80%;
+}
+
+    </style>
+  </head>
 <body>
 
 <h2>Image Here</h2>
 
-<form>
-  <p><strong>EMPLOYEES</strong></p>
-  <input type="checkbox" id="employee1" name="employee1" value="Jim">
-  <label for="employee1"> Jim</label><br>
-  
-  <input type="checkbox" id="employee2" name="employee2" value="Pam">
-  <label for="employee2"> Pam</label><br>
-  
-  <input type="checkbox" id="employee3" name="employee3" value="Dwight">
-  <label for="employee3"> Dwight</label><br>
-    
-  <input type="checkbox" id="employee4" name="employee4" value="Angela">
-  <label for="employee4"> Angela</label><br>
-      
+<button onclick="toggleScoresheet()">Scoresheet</button>
 
-  <input type="checkbox" id="employee5" name="employee5" value="Michael">
-  <label for="employee5"> Michael</label><br>
-  
-  <input type="checkbox" id="employee6" name="employee6" value="Andy">
-  <label for="employee6"> Andy</label><br>
-</form> 
+<div id="scoresheet" style="display: none;">
 
-<form>
-  <p><strong>WEAPONS</strong></p>
-  <input type="checkbox" id="weapon1" name="weapon1" value="Dundie Trophy">
-  <label for="weapon1"> Dundie Trophy</label><br>
-  
-  <input type="checkbox" id="weapon2" name="weapon2" value="Poisoned Pretzel">
-  <label for="weapon2"> Poisoned Pretzel</label><br>
-  
-  <input type="checkbox" id="weapon3" name="weapon3" value="Coffee Mug">
-  <label for="weapon3"> Coffee Mug</label><br>
-    
-  <input type="checkbox" id="weapon4" name="weapon4" value="Bacon Grill">
-  <label for="weapon4"> Bacon Grill</label><br>
-      
-  <input type="checkbox" id="weapon5" name="weapon5" value="Dunder Mifflin Paper">
-  <label for="weapon5"> Dunder Mifflin Paper</label><br>
-  
-  <input type="checkbox" id="weapon6" name="weapon6" value="Rabid Bat">
-  <label for="weapon6"> Rabid Bat</label><br>
-</form> 
+  <form>
+    <p><strong>EMPLOYEES</strong></p>
+    <input type="checkbox" id="employee1" name="employee1" value="Jim">
+    <label for="employee1"> Jim</label><br>
 
-<form>
-  <p><strong>ROOMS</strong></p>
-  <input type="checkbox" id="room1" name="room1" value="Reception">
-  <label for="room1"> Reception</label><br>
-  
-  <input type="checkbox" id="room2" name="room2" value="Conference Room">
-  <label for="room2"> Conference Room</label><br>
-  
-  <input type="checkbox" id="room3" name="room3" value="Break Room">
-  <label for="room3"> Break Room</label><br>
-    
-  <input type="checkbox" id="room4" name="room4" value="Accounting">
-  <label for="room4"> Accounting</label><br>
-      
-  <input type="checkbox" id="room5" name="wroom5" value="Parking lot">
-  <label for="room5"> Parking lot</label><br>
-  
-  <input type="checkbox" id="room6" name="room6" value="Warehouse">
-  <label for="room6"> Warehouse</label><br>
-  
-  <input type="checkbox" id="room7" name="room7" value="Kitchen">
-  <label for="room7"> Kitchen</label><br>
-  
-  <input type="checkbox" id="room8" name="room8" value="Michaels Office">
-  <label for="room8"> Michaels Office</label><br>
-</form> 
+    <input type="checkbox" id="employee2" name="employee2" value="Pam">
+    <label for="employee2"> Pam</label><br>
 
+    <input type="checkbox" id="employee3" name="employee3" value="Dwight">
+    <label for="employee3"> Dwight</label><br>
 
+    <input type="checkbox" id="employee4" name="employee4" value="Angela">
+    <label for="employee4"> Angela</label><br>
+
+    <input type="checkbox" id="employee5" name="employee5" value="Michael">
+    <label for="employee5"> Michael</label><br>
+
+    <input type="checkbox" id="employee6" name="employee6" value="Andy">
+    <label for="employee6"> Andy</label><br>
+  </form> 
+
+  <form>
+    <p><strong>WEAPONS</strong></p>
+    <input type="checkbox" id="weapon1" name="weapon1" value="Dundie Trophy">
+    <label for="weapon1"> Dundie Trophy</label><br>
+
+    <input type="checkbox" id="weapon2" name="weapon2" value="Poisoned Pretzel">
+    <label for="weapon2"> Poisoned Pretzel</label><br>
+
+    <input type="checkbox" id="weapon3" name="weapon3" value="Coffee Mug">
+    <label for="weapon3"> Coffee Mug</label><br>
+
+    <input type="checkbox" id="weapon4" name="weapon4" value="Bacon Grill">
+    <label for="weapon4"> Bacon Grill</label><br>
+
+    <input type="checkbox" id="weapon5" name="weapon5" value="Dunder Mifflin Paper">
+    <label for="weapon5"> Dunder Mifflin Paper</label><br>
+
+    <input type="checkbox" id="weapon6" name="weapon6" value="Rabid Bat">
+    <label for="weapon6"> Rabid Bat</label><br>
+  </form> 
+
+  <form>
+    <p><strong>ROOMS</strong></p>
+    <input type="checkbox" id="room1" name="room1" value="Reception">
+    <label for="room1"> Reception</label><br>
+
+    <input type="checkbox" id="room2" name="room2" value="Conference Room">
+    <label for="room2"> Conference Room</label><br>
+
+    <input type="checkbox" id="room3" name="room3" value="Break Room">
+    <label for="room3"> Break Room</label><br>
+
+    <input type="checkbox" id="room4" name="room4" value="Accounting">
+    <label for="room4"> Accounting</label><br>
+
+    <input type="checkbox" id="room5" name="wroom5" value="Parking lot">
+    <label for="room5"> Parking lot</label><br>
+
+    <input type="checkbox" id="room6" name="room6" value="Warehouse">
+    <label for="room6"> Warehouse</label><br>
+
+    <input type="checkbox" id="room7" name="room7" value="Kitchen">
+    <label for="room7"> Kitchen</label><br>
+
+    <input type="checkbox" id="room8" name="room8" value="Michaels Office">
+    <label for="room8"> Michaels Office</label><br>
+  </form> 
+
+</div>
+
+<script>
+function toggleScoresheet() {
+  var scoresheet = document.getElementById("scoresheet");
+  if (scoresheet.style.display === "none") {
+    scoresheet.style.display = "block";
+  } else {
+    scoresheet.style.display = "none";
+  }
+}
+</script>
 
 </body>
 </html>

@@ -26,16 +26,16 @@
          #messages > li:nth-child(odd) { background: #efefef; }
          .messsages-container{ margin: 0; padding: 0; width: 50%; height: 100%; background:rgba(235, 235, 235, 0.15)}
 
-         .movement-buttons {display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; gap: 10px; justify-items: center; align-items: center;}
-         .button { border: 1px solid #000; padding: 10px; cursor: pointer; background-color: #228B22; color: white; font-weight: bold; text-align: center;}
-         .button.up { grid-column: 2; grid-row: 1; }
-         .button.left { grid-column: 1; grid-row: 2; }
-         .button.right { grid-column: 3; grid-row: 2; }
-         .button.down { grid-column: 2; grid-row: 3; }
-         .button.pass { grid-column: 3; grid-row: 1; }
-
 
          .game-board-controllers {display: flex; flex-direction: row; align-items: center; justify-content: space-around; padding: 10px; gap: 50px; background-color: #ebebeb; }
+ .movement-buttons {display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; gap: 10px; justify-items: center; align-items: center;}
+ .button { border: 1px solid #000; padding: 10px; cursor: pointer; background-color: #228B22; color: white; font-weight: bold; text-align: center;}
+ .button.up { grid-column: 2; grid-row: 1; }
+ .button.left { grid-column: 1; grid-row: 2; }
+ .button.right { grid-column: 3; grid-row: 2; }
+ .button.down { grid-column: 2; grid-row: 3; }
+
+
          .game-board {display: grid; grid-template-columns: repeat(5, auto); grid-template-rows: repeat(3, auto); gap: 5px; justify-content: center;align-items: center;margin: 20px;padding: 10px;border: 3px solid #333; background-color: #ddd; }
 
          .room {width: 80px; height: 80px;background-color: #fff; border: 1px solid #000;display: flex;justify-content: center; align-items: center;text-align: center;font-size: smaller;}
@@ -45,15 +45,6 @@
          .middle-section{
             display:flex;
          }
-         #scoresheetIframe {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 300px; /* Adjust width as needed */
-            height: 100%; /* Full height or adjust as needed */
-            border: none;
-            z-index: 1050; /* Ensure it is on top of other content */
-        }
 
          .card {
             margin: 5px; /* Add some margin between each card */
@@ -160,6 +151,57 @@
         } 
         /* end popup */
 
+        .passage-room{
+         position: relative;
+        }
+        .corner{
+         position: relative;
+        }
+
+        .passage-left{
+         position: absolute;
+         height: 20px;  
+         width: 20px;
+         right: 1%;
+         bottom: 1%;
+         background: rgb(92, 92, 92);
+         text-align: center;
+         vertical-align: middle;
+        }
+
+        .passage-right{
+         position: absolute;
+         height: 20px;  
+         width: 20px;
+         left: 1%;
+         bottom: 1%;
+         background: rgb(92, 92, 92);
+         text-align: center;
+         vertical-align: middle;
+        }
+
+        .passage-bottom-left{
+         position: absolute;
+         height: 20px;  
+         width: 20px;
+         right: 1%;
+         top: 1%;
+         background: rgb(92, 92, 92);
+         text-align: center;
+         vertical-align: middle;
+        }
+
+        .passage-bottom-right{
+         position: absolute;
+         height: 20px;  
+         width: 20px;
+         left: 1%;
+         top: 1%;
+         background: rgb(92, 92, 92);
+         text-align: center;
+         vertical-align: middle;
+        }
+
          /* end css section  */
       </style>
        
@@ -220,11 +262,19 @@
          <ul id="messages"></ul>
       </div>
       <div class="game-board">
-         <div class="room" id="room-0-0">Reception</div>
+         <div class="passage-room">
+            <div class="room corner" id="room-0-0">Reception</div>
+            <div class="passage-left" >↘</div>
+         </div>
+         <!-- <div class="room" id="room-0-0">Reception</div> -->
          <div class="hallway" id="room-1-0"></div>
          <div class="room" id="room-2-0">Conference Room</div>
          <div class="hallway" id="room-3-0"></div>
-         <div class="room" id="room-4-0">Break Room</div>
+         <div class="passage-room">
+            <div class="room corner" id="room-4-0">Break Room</div>
+            <div class="passage-right" >↙</div>
+         </div>
+         
    
          
          <div class="hallway" id="room-0-1"></div>
@@ -246,12 +296,19 @@
          <div class="blank" id="room-3-3"></div>
          <div class="hallway" id="room-4-3"></div>
    
-   
-         <div class="room" id="room-0-4">Warehouse</div>
+         <div class="passage-room">
+            <div class="room" id="room-0-4">Warehouse</div>
+            <div class="passage-bottom-left" >↗</div>
+         </div>
+         
          <div class="hallway" id="room-1-4"></div>
          <div class="room" id="room-2-4">Kitchen</div>
          <div class="hallway" id="room-3-4"></div>
-         <div class="room" id="room-4-4">Michael's Office</div>
+         <div class="passage-room">
+            <div class="room" id="room-4-4">Michael's Office</div>
+            <div class="passage-bottom-right" >↖</div>
+         </div>
+         
       </div>
    </div>
    <div class="middle-section">
@@ -283,7 +340,7 @@
    </div>
    <div class="notepad-container">
       <iframe src="./components/Notepad.html" style="width:100%; height:200px; border:none;"></iframe>
-      <!-- <iframe  id="scoresheetIframe" src="./components/Scoresheet.html" style="border:none; width: 100%"></iframe><br><br> -->
+      <!-- <iframe id="scoresheetIframe" src="./components/Scoresheet.html" style="border:none; width: 100%"></iframe><br><br> -->
 
    </div>
 

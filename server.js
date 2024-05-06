@@ -30,11 +30,24 @@ let playerRoomPosition = [
    {name: "Andy", x: 0, y: 1, profile:'images/profile_andy.png'}
 ]
 
+let roomCoordinates = [
+   {name: "Reception", x: 0, y: 0},
+   {name: "ConferenceRoom", x: 2, y: 0},
+   {name: "BreakRoom", x: 4, y: 0},
+   {name: "Annex", x: 0, y: 2},
+   {name: "Accounting", x: 2, y: 2},
+   {name: "ParkingLot", x: 4, y: 2},
+   {name: "Warehouse", x: 0, y: 4},
+   {name: "Kitchen", x: 2, y: 4},
+   {name: "MichaelsOffice", x: 4, y: 4}
+]
+   
 var users = [];
 var n = 0;
 var data;
 
 io.on('connection', (socket) => {
+   io.emit('chat message', 'Welcome to Clue-Less! Enter your name and click start when all players have joined.');
    // initialize a user when they enter
    console.log('a user connected');
    n = n+1;
@@ -103,19 +116,6 @@ io.on('connection', (socket) => {
       players.forEach((player, index) => {
          io.to(players[index].userID).emit('dealCards', players[index].cardList);
        });
-
-      // // Populate each player's cardList
-      // const playerHands = ca.DealCards(users.length);
-      // users.forEach((user, index) => {
-      //    user.cardList = playerHands[index];
-      // });
-
-      // // Emit the 'dealCards' event with the player's card list
-      // users.forEach(user => {
-      //    io.to(user.id).emit('dealCards', user.cardList);
-      // });
-      
-      // io.to(data.activePlayer.userID).emit('startTurn');
    });
 
    socket.on('showCard', (card) => {
@@ -166,7 +166,7 @@ io.on('connection', (socket) => {
          msg = "Suggestion was not disproven!";
       }
       else {
-         msg = pokee.character  + '(' + pokee.name + ') showed a card!'; 
+         msg = "Waiting for " + pokee.character  + '(' + pokee.name + ') to show a card!'; 
       }
       io.emit('chat message', msg);
       io.to(data.activePlayer.userID).emit('postSugg');
@@ -177,32 +177,6 @@ io.on('connection', (socket) => {
       handleEnd();
    });
 
-   // // when someone submits action text
-   // socket.on('action', (act) => {
-   //    let all = act.split(" ");
-   //    if (all.length > 1) {
-   //       act = all[0];
-   //    }
-
-   //    switch (act) {
-   //       case 'suggestion':
-   //          handleSuggestion(all);
-   //          break;
-   //       case 'accusation':
-   //          let msg = handleAccusation(all);
-   //          io.emit('chat message', msg)
-   //          break;
-   //       case 'end':
-   //          handleEnd();
-   //          break;
-   //       default:
-   //          if (act == 'up' || act == 'down' || act == 'left' || act == 'right' || act == 'passage') {
-   //             handleMove(act);
-   //          }
-   //          else {
-   //             io.emit('chat message', 'Invalid entry!!!');
-   //          }
-   //    }
    //     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
    //    // $$$ end socket.on(action) $$$
    //    // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -311,7 +285,11 @@ io.on('connection', (socket) => {
       function handleSuggestion(sug) {
 
          var suggestion = dr.makeSuggestion(data.activePlayer, sug.suspect, sug.weapon)
-
+         let susPlayer = playerRoomPosition.find(player => player.name === suggestion.suspect);
+         let susRoom = roomCoordinates.find(room => room.name === suggestion.room);
+         susPlayer.x = susRoom.x;
+         susPlayer.y = susRoom.y;
+         io.emit('playerRoomPosition', playerRoomPosition);
          for (let ip = 0; ip < data.players.length; ip++) {
             if (suggestion.suspect == data.players[ip].character) {
                let roomObj = getPropMatchObj(data.rooms, 'name', suggestion.room);

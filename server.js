@@ -76,9 +76,21 @@ io.on('connection', (socket) => {
       let players = data.players;
       // updatePlayerPositions()
 
+      let cardTxt;
+      for (let ip = 0; ip < data.players.length; ip++) {
+         cardTxt = "Your cards are:";
+         for (let ic = 0; ic < data.players[ip].cardList.length; ic++) {
+            cardTxt = cardTxt + " " + data.players[ip].cardList[ic].name;
+         } // end loop over cards
+         io.to(data.players[ip].userID).emit('chat message', cardTxt);
+      } // end loop over players
+
       msg = data.activePlayer.character + '(' + data.activePlayer.name + ') you are up!!';
       io.emit('chat message', msg);
       io.emit('startOff');
+
+      let buttonList = dr.startTurn(data.activePlayer);
+      io.to(data.activePlayer.userID).emit('startTurn', buttonList);
 
       users.forEach((user, index) => {
          // Send individual start data to each client
@@ -103,16 +115,12 @@ io.on('connection', (socket) => {
       //    io.to(user.id).emit('dealCards', user.cardList);
       // });
       
-      io.to(data.activePlayer.userID).emit('startTurn');
+      // io.to(data.activePlayer.userID).emit('startTurn');
    });
 
    socket.on('showCard', (card) => {
       io.to(data.activePlayer.userID).emit('seeCard', card);
       
-   });
-
-   socket.on('suggestion', (data) => {
-      handleSuggestion(data);
    });
 
    socket.on('goUp', () => {
@@ -139,13 +147,29 @@ io.on('connection', (socket) => {
       handleMove('passage'); 
    });
 
-   socket.on('makeAccusation', (data) => {
-      handleAccusation('accusation', data);
+   socket.on('makeAccusation', (dat) => {
+      let win;
+      win = handleAccusation(dat);
+      if (win) {
+         io.emit('endGame', data.activePlayer, dat);
+      }
+      else {
+         handleEnd();
+      }
    });
 
    //socket on for suggestion
-   socket.on('makeSuggestion', (data) => {
-      handleSuggestion( data);
+   socket.on('makeSuggestion', (dat) => {
+      let pokee = handleSuggestion(dat);
+      let msg;
+      if (pokee == null) {
+         msg = "Suggestion was not disproven!";
+      }
+      else {
+         msg = pokee.character  + '(' + pokee.name + ') showed a card!'; 
+      }
+      io.emit('chat message', msg);
+      io.to(data.activePlayer.userID).emit('postSugg');
    });
 
    //socket on end turn
@@ -215,6 +239,24 @@ io.on('connection', (socket) => {
                 // Assuming the board has a maximum `x` value of 4
                 if (player.x < 4) player.x++;
                 break;
+            case 'passage':
+               if (player.x==0 && player.y ==0){
+                  player.x = 4
+                  player.y =4
+               }
+               else if (player.x==4 && player.y ==0){
+                  player.x = 0
+                  player.y =4
+               }
+               else if (player.x==0 && player.y ==4){
+                  player.x = 4
+                  player.y = 0
+               }
+               else if (player.x==4 && player.y ==4){
+                  player.x = 0
+                  player.y = 0
+               }
+               break;
         }
 
          // Create descriptive message of first room for text based
@@ -240,6 +282,8 @@ io.on('connection', (socket) => {
          // Add new room to message
          msg = msg + data.activePlayer.room.name;
          io.emit('chat message', msg);
+         io.to(data.activePlayer.userID).emit('postMove', data.activePlayer.room.name);
+
          // updatePlayerPositions();
       }
 
@@ -252,8 +296,12 @@ io.on('connection', (socket) => {
          
 
          // Start active player turn (initialize vars and activate button)
-         dr.startTurn(data.activePlayer);
-         io.to(data.activePlayer.userID).emit('startTurn');
+         let buttonList = dr.startTurn(data.activePlayer);
+         io.to(data.activePlayer.userID).emit('startTurn', buttonList);
+
+         // // Start active player turn (initialize vars and activate button)
+         // dr.startTurn(data.activePlayer);
+         // io.to(data.activePlayer.userID).emit('startTurn');
 
          // Tell next player they're up
          let msg = data.activePlayer.character + '(' + data.activePlayer.name + ') you are up!!';
@@ -264,35 +312,63 @@ io.on('connection', (socket) => {
 
          var suggestion = dr.makeSuggestion(data.activePlayer, sug.suspect, sug.weapon)
 
+         for (let ip = 0; ip < data.players.length; ip++) {
+            if (suggestion.suspect == data.players[ip].character) {
+               let roomObj = getPropMatchObj(data.rooms, 'name', suggestion.room);
+               data.players[ip].jump(roomObj)
+               io.emit('chat message', data.players[ip].character + '(' + data.players[ip].name + ') got moved to ' + suggestion.room )
+            }
+         }
+
          playerToPoke = dr.pollSuggestion(data.activePlayer, suggestion, data.players.length);
          // io.emit('chat message', 'in suggestion');
 
+         data.activePlayer.hasSuggested = true;
+
          if (playerToPoke == null) {
-            return 'Suggestion was not disproven'
+            return null;
          }
 
          var opts = playerToPoke.checkPoll(suggestion);
          
-         io.emit('chat message', 'ab 2 poke');
-         io.to(playerToPoke.userID).emit('chat message', 'im gonna poke you');
+         // io.emit('chat message', 'ab 2 poke');
+         // io.to(playerToPoke.userID).emit('chat message', 'im gonna poke you');
 
          socket.to(playerToPoke.userID).emit('poke', opts);
 
          
 
-         data.activePlayer.hasSuggested = true;
+         
 
-         return  playerToPoke.name + ' showed a card'
+         return  playerToPoke;
       }
 
-      function handleAccusation(accArray) {
-         let suspect = accArray[1];
-         let weapon = accArray[2];
-         let room = accArray[3];
-         
-         var accusation = makeSuggestion(data.activePlayer, suspect, weapon, true, room)
+      function handleAccusation(acc) {         
+         var accusation = dr.makeSuggestion(data.activePlayer, acc.suspect, acc.weapon, true, acc.room)
          var isRight = dr.checkAccusation(accusation, data.secret);
 
+         let msg;
+         if (isRight) {
+            msg = data.activePlayer.character + '(' + data.activePlayer.name + ') won the game!!!!'
+         }
+         else {
+            let iActiv = getUserIndex(data.activePlayer.userID);
+            let iLast, iNew;
+            if (iActiv == 0) {
+               iLast = data.players.length-1;
+            }
+            else {iLast = iActiv - 1;}
+            if (iActiv == data.players.length-1) {
+               iNew = 0;
+            }
+            else {iNew = iActiv + 1;}
+
+            data.players[iLast].next = data.players[iNew];
+            data.players.splice(iActiv,1);
+            msg = data.activePlayer.character + '(' + data.activePlayer.name + ') was wrong - they are out of the game'
+         }
+         io.emit('chat message', msg);
+         return isRight;
       }
 
      
@@ -323,6 +399,16 @@ function getUserIndex(id) {
       }
    }
    return i;
+}
+
+function getPropMatchObj(objArray, propStr, strMatch) {
+   let match = null;
+   for (let i = 0; i < objArray.length; i++) {
+      if (objArray[i][propStr] == strMatch) {
+         match = objArray[i];
+      }
+   }
+   return match;
 }
 
 // // This should be called whenever you need to update the player positions, such as after a move or at game start.

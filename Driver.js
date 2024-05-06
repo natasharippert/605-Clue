@@ -195,6 +195,7 @@ function pollSuggestion(activePlayer, suggestion, nPlayer) {
       else {
          match = true;
       }
+      iCheck++;
    } // end while
    if (!match) {
       hotSeat = null;
@@ -204,7 +205,12 @@ function pollSuggestion(activePlayer, suggestion, nPlayer) {
 } // end pollSuggestion
 
 function pickCrime(ccards, wcards, rcards) {
-   return [ccards.dealOne(), wcards.dealOne(), rcards.dealOne(), ];
+   secret = {
+      'suspect': ccards.dealOne(),
+      'weapon': wcards.dealOne(),
+      'room': rcards.dealOne()
+   }
+   return secret;
 } // end pickCrime
 
 
@@ -246,8 +252,10 @@ function grabProps(array, propChar) {
 
 
 function move(activePlayer, dir) {
+   let success = true;
    if (activePlayer.hasMoved || activePlayer.hasSuggested) {
       console.log("You already moved!!!")
+      success = false;
    }
    else {
       move = dir;
@@ -257,9 +265,11 @@ function move(activePlayer, dir) {
       }
       else {
          console.log("You can't go that way!!!")
+         success = false;
       }
    } 
 }
+
 
 function suggestion(activePlayer) {
    if (hasSuggested) {
@@ -320,8 +330,21 @@ function startTurn(activePlayer) {
    activePlayer.myTurn = true;
    activePlayer.hasMoved = false;
    activePlayer.hasSuggested = false;
-}
 
+   let buttonList = ['accusation', 'endTurn'];
+   let dirs = ["up", "down", "left", "right", "passage"]
+   for (let id = 0; id < dirs.length; id++){
+      if (activePlayer.room[dirs[id]] != null && !activePlayer.room[dirs[id]].isfull()) {
+         buttonList.push(dirs[id]);
+      }
+   }
+
+   if (activePlayer.dropped) {
+      buttonList.push('suggestion');
+   }
+
+   return buttonList;
+}
 
 
 

@@ -5,8 +5,6 @@ class Room{
    constructor(name, imgURL, x, y, occupancy = 50, up=null, left=null, right=null, down=null, passage=null, occupants=new Set(), weapons=new Set())  {
       this.name =  name;
       this.imgURL =  imgURL;
-      // this.x = x; // X coordinate
-      // this.y = y; // Y coordinate
 		this.up =  up;
 		this.left =  left;
 		this.right =  right;
@@ -37,7 +35,7 @@ class Room{
       } // end addWeapon
 
       isfull() {
-         if (this.occupants.length > this.occupancy) {
+         if (this.occupants.size > this.occupancy) {
             return true;
          }
          else {

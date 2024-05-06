@@ -24,8 +24,7 @@
          #messages { list-style-type: none; margin: 0; padding: 0; width: 100%;}
          #messages > li { padding: 0.5rem 1rem; }
          #messages > li:nth-child(odd) { background: #efefef; }
-         .messsages-container{ margin: 0; padding: 0; width: 50%; height: 100%; background:rgba(235, 235, 235, 0.15)}
-
+         .messsages-container{ margin: 0; padding: 0; width: 100%; height: 100%; background:rgba(235, 235, 235, 0.15)}
 
          .game-board-controllers {display: flex; flex-direction: row; align-items: center; justify-content: space-around; padding: 10px; gap: 50px; background-color: #ebebeb; }
  .movement-buttons {display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto; gap: 10px; justify-items: center; align-items: center;}
@@ -38,7 +37,28 @@
 
          .game-board {display: grid; grid-template-columns: repeat(5, auto); grid-template-rows: repeat(3, auto); gap: 5px; justify-content: center;align-items: center;margin: 20px;padding: 10px;border: 3px solid #333; background-color: #ddd; }
 
-         .room {width: 80px; height: 80px;background-color: #fff; border: 1px solid #000;display: flex;justify-content: center; align-items: center;text-align: center;font-size: smaller;}
+         /* .room {width: 80px; height: 80px;background-color: #fff; border: 1px solid #000;display: flex;justify-content: center; align-items: center;text-align: center;font-size: smaller;} */
+         .room {
+            display: flex;  
+            width: 80px; 
+            height: 80px;
+            flex-wrap: wrap;
+            position: relative;
+            background-color: #fff; 
+            border: 1px solid #000;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            text-align: center;
+            font-size: smaller;
+            overflow: hidden; 
+         }
+
+         .player-image {
+            width: 50%;                 /* Adjust size as needed */
+            height: auto;               /* Maintain aspect ratio */
+            max-height: 100%;           /* Limit height to container size */
+         }
 
          .hallway {width: 80px; height: 80px;background-color: #bbb; border: 1px solid #888; display: flex;justify-content: center;align-items: center;text-align: center;}
 
@@ -210,20 +230,26 @@
    <!-- html section  -->
    <h2>Clue-Less</h2>
 
-   <!-- <div id="popupOverlay" 
+    <!-- <div id="popupOverlay" 
          class="overlay-container">  -->
          <div class="popup-box" id="popupOverlay"> 
             <h2 style="color: green;">Popup Form</h2> 
             <form class="form-container"
                   id="showForm"> 
-                <label class="form-label" 
+
+
+               <select name="showSel" id="showSel">
+                  <option value="" selected="selected">Select card to show</option>
+               </select>
+
+                <!-- <label class="form-label" 
                      id="showLabel"
                        for="card2show">   
                   Card To Show: 
                   </label> 
                 <input class="form-input" type="text" 
                        placeholder="Enter a card" 
-                       id="card2show" name="card2show" required> 
+                       id="card2show" name="card2show" required>  -->
                   
                 <button class="btn-submit" 
                         id="subShowCard"
@@ -246,6 +272,10 @@
             <select name="weaponSel" id="weaponSel">
                <option value="" selected="selected">Select weapon</option>
             </select>
+            
+            <select name="roomSel" id="roomSel" display="none">
+               <option value="" selected="selected">Select room</option>
+            </select>
 
             <button class="btn-submit" 
                         id="test22"
@@ -257,7 +287,7 @@
       <!-- end suggestion submission -->
 
    <div class="main-board">
-      <div class="messsages-container">
+      <div class="messages-container">
          <h5>Messages</h5>
          <ul id="messages"></ul>
       </div>
